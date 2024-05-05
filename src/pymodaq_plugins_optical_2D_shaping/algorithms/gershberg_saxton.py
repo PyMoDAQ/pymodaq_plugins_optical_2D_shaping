@@ -16,6 +16,8 @@ from pymodaq.utils.logger import set_logger, get_module_name
 from pymodaq.utils.data import DataFromPlugins, DataToExport, DataRaw
 from pymodaq.utils import math_utils as mutils
 
+from pymodaq_plugins_optical_2D_shaping.algorithms.base import AlgoBase
+
 logger = set_logger(get_module_name(__file__))
 
 cheshire_cat_path = Path(__file__).parent.parent.joinpath('resources/cheshirecat_rect.png')
@@ -96,10 +98,10 @@ class InputIntensity:
         return data_int * np.sum(self.intensity) / np.sum(data_int)
 
 
-class GBSAX:
+class GBSAX(AlgoBase):
 
     def __init__(self, input_size=(11, 11)):
-
+        super().__init__()
         self.object_shape = (768, 1024)
         self.image_shape: Tuple[int, int] = None
 

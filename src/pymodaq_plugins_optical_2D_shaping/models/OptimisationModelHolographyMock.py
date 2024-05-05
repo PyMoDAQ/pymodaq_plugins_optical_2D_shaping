@@ -4,8 +4,8 @@ from pathlib import Path
 import numpy as np
 from qtpy import QtWidgets, QtCore
 
-from pymodaq_plugins_optimisation.utils import OptimisationModelGeneric, DataToActuatorOpti
-from pymodaq_plugins_optimisation.hardware.gershberg_saxton import GBSAX
+from pymodaq_plugins_optical_2D_shaping.utils import OptimisationModelGeneric, DataToActuatorOpti
+from pymodaq_plugins_optical_2D_shaping.algorithms.gershberg_saxton import GBSAX
 
 from pymodaq.utils.logger import set_logger, get_module_name
 from pymodaq.utils.data import DataToExport, DataActuator, DataWithAxes, DataRaw
@@ -17,7 +17,7 @@ from skimage.io import imread
 from skimage.color import rgb2gray
 
 if TYPE_CHECKING:
-    from pymodaq_plugins_optimisation.extensions.optimisation import Optimisation
+    from pymodaq_plugins_optical_2D_shaping.extensions.optical_shaping import OpticalShaping
 
 logger = set_logger(get_module_name(__file__))
 

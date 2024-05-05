@@ -7,10 +7,11 @@ import numpy as np
 from pymodaq.utils.logger import set_logger, get_module_name
 from pymodaq.utils.data import DataToExport, DataActuator, DataRaw
 
-from pymodaq_plugins_optimisation.models.OptimisationModelHolographyMock import \
+from pymodaq_plugins_optical_2D_shaping.models.OptimisationModelHolographyMock import \
     OptimisationModelHolographyMock, DataToActuatorOpti, OptimisationModelGeneric
 
 logger = set_logger(get_module_name(__file__))
+resources_path = Path(__file__).parent.parent
 
 
 class OptimisationModelHolography(OptimisationModelHolographyMock):
@@ -24,7 +25,7 @@ class OptimisationModelHolography(OptimisationModelHolographyMock):
         self.set_source()
         self.optimisation_algorithm.load_image()
 
-        calib = np.load(Path(r'C:\Users\weber\Labo\Programmes Python\PyMoDAQ_Git\pymodaq_plugins_folder\pymodaq_plugins_optimisation\src\pymodaq_plugins_optimisation\resources\calibration_holography.npy'))
+        calib = np.load(resources_path.joinpath('calibration_holography.npy'))
         grey = calib[0, :]
         phase = calib[1, :]
         self.phase_polyfit = np.polynomial.Polynomial.fit(phase, grey, 11)

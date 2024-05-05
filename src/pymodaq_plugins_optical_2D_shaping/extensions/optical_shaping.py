@@ -1,31 +1,37 @@
 from typing import List, Union
+import time
+
+
+import numpy as np
+from qtpy import QtWidgets, QtCore
+
 
 from pymodaq.utils import gui_utils as gutils
 from pymodaq.utils import daq_utils as utils
+from pymodaq.utils.logger import set_logger, get_module_name
 from pymodaq.utils.parameter import utils as putils
-from qtpy import QtWidgets, QtCore
-import time
-import numpy as np
 from pymodaq.utils.data import DataToExport, DataActuator, DataCalculated
 from pymodaq.utils.plotting.data_viewers.viewer0D import Viewer0D
-
-
 from pymodaq.utils.plotting.data_viewers.viewer import ViewerDispatcher
-from pymodaq_plugins_optimisation.utils import get_optimisation_models, OptimisationModelGeneric, DataToActuatorOpti
+from pymodaq_plugins_optical_2D_shaping.utils import (get_optimisation_models,
+                                                      OptimisationModelGeneric,
+                                                      DataToActuatorOpti)
 from pymodaq.utils.gui_utils import QLED
 from pymodaq.utils.managers.modules_manager import ModulesManager
-
 from pymodaq.utils.config import Config
-from pymodaq_plugins_optimisation import config as plugin_config
-logger = utils.set_logger(utils.get_module_name(__file__))
+
+from pymodaq_plugins_optical_2D_shaping import config as plugin_config
+
+
+logger = set_logger(get_module_name(__file__))
 
 config = Config()
 
-EXTENSION_NAME = 'Optimisation'
-CLASS_NAME = 'Optimisation'
+EXTENSION_NAME = 'Optical Shaping'
+CLASS_NAME = 'OpticalShaping'
 
 
-class Optimisation(gutils.CustomApp):
+class OpticalShaping(gutils.CustomApp):
     command_runner = QtCore.Signal(utils.ThreadCommand)
     models = get_optimisation_models()
 
@@ -97,7 +103,7 @@ class Optimisation(gutils.CustomApp):
             self.settings.child('models', 'model_params').addChildren(params)
 
     def setup_menu(self):
-        '''
+        """
         to be subclassed
         create menu for actions contained into the self.actions_manager, for instance:
 
@@ -109,11 +115,11 @@ class Optimisation(gutils.CustomApp):
 
         file_menu.addSeparator()
         self.actions_manager.affect_to('quit', file_menu)
-        '''
+        """
         pass
 
     def value_changed(self, param):
-        ''' to be subclassed for actions to perform when one of the param's value in self.settings is changed
+        """ to be subclassed for actions to perform when one of the param's value in self.settings is changed
 
         For instance:
         if param.name() == 'do_something':
@@ -124,7 +130,7 @@ class Optimisation(gutils.CustomApp):
         Parameters
         ----------
         param: (Parameter) the parameter whose value just changed
-        '''
+        """
         if param.name() == 'model_class':
             self.get_set_model_params(param.value())
         elif param.name() in putils.iter_children(self.settings.child('models', 'model_params'), []):
@@ -288,9 +294,11 @@ class OptimisationRunner(QtCore.QObject):
                 self.outputs: List[np.ndarray] = []
                 self.outputs = [self.optimisation_algorithm.evolve(self.inputs_from_dets)]
 
-                dte = DataToExport('algo',
-                                   data=[DataCalculated('fitness',
-                                                        data=[np.array([self.optimisation_algorithm.fitness])]),
+                dte = DataToExport(
+                    'algo',
+                    data=[DataCalculated(
+                        'fitness',
+                        data=[np.array([self.optimisation_algorithm.fitness])]),
                                          ])
 
                 # # # APPLY THE population OUTPUT TO THE ACTUATOR

@@ -1,10 +1,10 @@
 ## To modify by developper(s) of the plugin
 
 [plugin-info]
-SHORT_PLUGIN_NAME = 'optimisation'
+SHORT_PLUGIN_NAME = 'optical_2D_shaping'
 
-package-url = 'https://github.com/PyMoDAQ/pymodaq_plugins_optimisation' #to modify
-description = "PyMoDAQ's extension plugin to run optimisation algorithms"
+package-url = 'https://github.com/PyMoDAQ/pymodaq_plugins_optical_2D_shaping' #to modify
+description = "PyMoDAQ's extension plugin to run optical shaping from various shapers (focusing on amplitude and phase shaping) and the image propagation"
 
 author = 'Sebastien J. Weber'
 author-email = 'sebastien.weber@cemes.fr'
