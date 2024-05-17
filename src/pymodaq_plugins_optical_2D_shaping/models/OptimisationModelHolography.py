@@ -11,7 +11,7 @@ from pymodaq_plugins_optical_2D_shaping.models.OptimisationModelHolographyMock i
     OptimisationModelHolographyMock, DataToActuatorOpti, OptimisationModelGeneric
 
 logger = set_logger(get_module_name(__file__))
-resources_path = Path(__file__).parent.parent
+resources_path = Path(__file__).parent.parent.joinpath('resources')
 
 
 class OptimisationModelHolography(OptimisationModelHolographyMock):
