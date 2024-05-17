@@ -6,7 +6,7 @@ from qtpy import QtWidgets, QtCore
 
 from pymodaq_plugins_optical_2D_shaping.utils import OptimisationModelGeneric, DataToActuatorOpti
 from pymodaq_plugins_optical_2D_shaping.algorithms.gershberg_saxton import GBSAX
-
+from pymodaq.utils.plotting.utils.plot_utils import RoiInfo
 from pymodaq.utils.logger import set_logger, get_module_name
 from pymodaq.utils.data import DataToExport, DataActuator, DataWithAxes, DataRaw
 from pymodaq.utils.plotting.data_viewers import Viewer2D, ViewersEnum
@@ -53,10 +53,10 @@ class OptimisationModelHolographyMock(OptimisationModelGeneric):
         self.optimisation_controller.dockarea.addDock(target_dock, 'bottom',
                                                       self.optimisation_controller.docks['settings'])
         self.viewer_target = Viewer2D(widget_target)
-        self.viewer_target.ROI_select_signal.connect(self.set_mask)
-        self.mask: QtCore.QRectF = None
+        self.viewer_target.roi_select_signal.connect(self.set_mask)
+        self.mask: RoiInfo = None
 
-    def set_mask(self, mask: QtCore.QRectF):
+    def set_mask(self, mask: RoiInfo):
         self.mask = mask
 
     def update_settings(self, param):
@@ -112,10 +112,10 @@ class OptimisationModelHolographyMock(OptimisationModelGeneric):
         if self.settings['apply_mask']:
             data = self._temp_target_data.deepcopy()
             data.data[0] = np.zeros(data.data[0].shape)
-            data.data[0][int(self.mask.y()): int(self.mask.y()+self.mask.height()),
-                         int(self.mask.x()): int(self.mask.x()+self.mask.width())] = \
-                self._temp_target_data.data[0][int(self.mask.y()): int(self.mask.y()+self.mask.height()),
-                int(self.mask.x()): int(self.mask.x()+self.mask.width())]
+            data.data[0][int(self.mask.origin[0]): int(self.mask.origin[0]+self.mask.size[0]),
+                         int(self.mask.origin[1]): int(self.mask.origin[1]+self.mask.size[1])] = \
+                self._temp_target_data.data[0][int(self.mask.origin[0]): int(self.mask.origin[0]+self.mask.size[0]),
+                         int(self.mask.origin[1]): int(self.mask.origin[1]+self.mask.size[1])]
             data = self.transform_image(data)
             self.optimisation_algorithm.load_target_data(data)
         else:
